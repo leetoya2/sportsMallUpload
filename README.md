@@ -4,7 +4,7 @@ The product included is the sports shopping mall.
 This is the project made with angular 9 and typescript along with bootstrap 4 library. I designed this sight by referencing the world famous sports shopping mall which is Nike.
 It is not finished yet and still in progress. Therefore I will update the project whenever I add new features.
 
-If you have any question or advice, please do not hesitate to contact to leetoya2@naver.com
+If you have any question or advice, please contact to leetoya2@naver.com
 Thanks
 
 
