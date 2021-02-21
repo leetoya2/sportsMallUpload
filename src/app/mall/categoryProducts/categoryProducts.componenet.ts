@@ -1,29 +1,43 @@
-﻿import { Component, Input } from "@angular/core";
-import { ActivatedRoute } from '@angular/router';
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Repository } from '../../models/repository.model';
 import { Product } from '../../models/product.model';
+import { Category } from '../../models/category.model';
 
 @Component({
     selector: "category-products",
-    templateUrl: "./categoryProducts.component.html"
+    templateUrl: "./categoryProducts.component.html",
+    styleUrls: ['./categoryProducts.component.css']
 })
 export class CategoryProductsComponent {
 
-    public cateogryProductList: Product[];
+    public productList: Product[];
+    public cateogryParentCategoryId: number;
     public productsPerPage = 9;
     public productsPerRow = 3;
     public selectedPage = 1;
+    public categoryList: Category[];
+    
+    constructor(private repository: Repository, activeRoute: ActivatedRoute, private router: Router) {
 
-    constructor(private repository: Repository, activeRoute: ActivatedRoute) {
-        let category: string = activeRoute.snapshot.url[1].path;
+        let parentCategory: string = activeRoute.snapshot.url[1].path;
+        this.router.events.subscribe((e: any) => {
+            this.productList = repository.getProductListInParentCategory(parentCategory);
+            this.categoryList = repository.getCategoryListInParentCategory(parentCategory);
+        });
+
         repository.getProducts().subscribe(data => {
-            this.cateogryProductList = repository.getSelectedCategoryProductList(category);
+            this.productList = repository.getProductListInParentCategory(parentCategory);
+        });
+
+        repository.getParentCategories().subscribe(data => {
+            this.categoryList = repository.getCategoryListInParentCategory(parentCategory);
         });
     }
-
+    
     get products(): Product[] {
         let pageIndex = (this.selectedPage - 1) * this.productsPerPage;
-        return this.cateogryProductList.slice(pageIndex, pageIndex + this.productsPerPage);
+        return this.productList.slice(pageIndex, pageIndex + this.productsPerPage);
     }
 
     changePage(newPage: number) {
@@ -31,6 +45,10 @@ export class CategoryProductsComponent {
     }
 
     get pageCount(): number {
-        return Math.ceil(this.cateogryProductList.length / this.productsPerPage);
+        return Math.ceil(this.productList.length / this.productsPerPage);
+    }
+
+    getProductsByCategoryIdInParentCategory(categoryId:number) {
+        this.productList = this.repository.getProductsByCategoryIdInParent(categoryId);
     }
 }

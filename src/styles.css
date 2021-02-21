@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+@media (min-width: 1200px) {
+    .container{
+        max-width: 1400px !important;
+    }
+}
+
+.ml-6
+{
+    margin-left: 4rem !important;
+}
+
+*:focus {
+    outline: 0 !important;
+}
+
+a {
+    cursor: pointer;
+}
